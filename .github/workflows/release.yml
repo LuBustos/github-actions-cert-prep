@@ -1,0 +1,61 @@
+name: Create Release
+
+on:
+  workflow_dispatch:
+jobs:
+  build-and-package:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Set up NodeJs
+        uses: actions/setup-node@v3
+        with: #with: Input values for the action
+          node-version: 18
+      - name: Install dependecies
+        run: npm install
+
+      - name: Run tests
+        run: npm test
+      - name: Run build
+        run: npm build
+      - name: Package application
+        run: zip -r build.zip
+      - name: Upload Artifaces
+        uses: actions/upload-artifact@v3
+        with:
+          name: packaged-app
+          path: build.zip
+
+  release:
+    needs: build-and-package
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Create realease
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+        with:
+          tag_name: ${{github.ref}}
+          release_name: Release ${{github.ref}}
+          draft: false
+          prerelease: false
+        #   body:
+        #   # Instuctions
+        #     - Step 1: ...
+        #     - Step 2: ...
+        #   # Notes
+        #   - Note 1: ...
+        #   -
+      - name: Upload Release Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+        with:
+          upload_url: ${{steps.create_release.outputs.upload_url}}
+          asset_path: ./app.zip
+          asset_name: app/zip
+          asset_content_type: application/zip
