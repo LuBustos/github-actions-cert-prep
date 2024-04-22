@@ -43,7 +43,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
         with:
-          tag_name: Main
+          tag_name: Main ${{github.ref_name}}
           release_name: Release Main
           draft: false
           prerelease: false
@@ -51,12 +51,12 @@ jobs:
             Changes in this Release
             - First Change
             - Second Change
-      - name: Upload Release Asset
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
-        with:
-          upload_url: ${{steps.create_release.outputs.upload_url}}
-          asset_path: ./build.zip
-          asset_name: build/zip
-          asset_content_type: application/zip
+    #   - name: Upload Release Asset
+    #     uses: actions/upload-release-asset@v1
+    #     env:
+    #       GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+    #     with:
+    #       upload_url: ${{steps.create_release.outputs.upload_url}}
+    #       asset_path: ./build.zip
+    #       asset_name: build/zip
+    #       asset_content_type: application/zip
