@@ -30,6 +30,7 @@ jobs:
   release:
     needs: build-and-package
     runs-on: ubuntu-latest
+    permissions: write-all
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
