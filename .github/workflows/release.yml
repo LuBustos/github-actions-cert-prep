@@ -1,6 +1,9 @@
 name: Create Release
 
 on:
+  push:
+    tags:
+      - "v*" # Push events to matching v*, i.e. v1.0, v20.15.10
   workflow_dispatch:
 jobs:
   build-and-package:
@@ -44,13 +47,10 @@ jobs:
           release_name: Release ${{github.ref}}
           draft: false
           prerelease: false
-        #   body:
-        #   # Instuctions
-        #     - Step 1: ...
-        #     - Step 2: ...
-        #   # Notes
-        #   - Note 1: ...
-        #   -
+          body: |
+            Changes in this Release
+            - First Change
+            - Second Change
       - name: Upload Release Asset
         uses: actions/upload-release-asset@v1
         env:
