@@ -20,7 +20,7 @@ jobs:
       - name: Run build
         run: npm run build
       - name: Package application
-        run: zip -r build.zip
+        run: zip -r build.zip build
       - name: Upload Artifaces
         uses: actions/upload-artifact@v3
         with:
