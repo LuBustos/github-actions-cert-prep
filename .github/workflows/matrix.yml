@@ -1,0 +1,29 @@
+# Execute 6 jobs in parallel node 12, 14 16 for ubuntu and node 12, 14 16 for windows
+# if one job fail, the others jobs are going to fail
+
+# include is not adding two jobs only one for 18 and ubuntu.
+# if I addded in the matrix is going to create two jobs, one for ubuntu and other one for winwdows.
+
+name: Matrix Demo
+on: workflow_dispatch
+jobs:
+  build:
+    strategy:
+      matrix:
+        version: [12, 14, 16]
+        os: [ubuntu-latest, windows-latest]
+        include:
+          - node-version: 18
+            operating-system: ubuntu-latest
+    runs-on: ${{ matrix.operating-system }}
+    steps:
+      - name: Get code
+        uses: actions/checkout@v3
+      - name: Install NodeJs
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Install dependencies
+        run: npm ci
+      - name: Build project
+        run: npm run build
